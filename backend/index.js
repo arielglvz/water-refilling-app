@@ -129,7 +129,7 @@ app.post("/add-note", authenticateToken, async (req, res) => {
   const { user } = req.user;
 
   if (!title) {
-    res.status(400)
+    return res.status(400)
       .json({
         error: true,
         message: "Title is required"
@@ -165,6 +165,12 @@ app.post("/add-note", authenticateToken, async (req, res) => {
       message: "Internal Server Error",
     })
   }
+})
+
+
+// Edit Note
+app.post("/edit-note:/noteId", authenticateToken, async (req, res) => {
+  const noteId = req.params.noteId;
 })
 
 app.listen(8000);

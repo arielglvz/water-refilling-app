@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import TagInput from '../../components/Input/TagInput'
 import { MdClose } from 'react-icons/md';
+import axiosInstance from '../../utils/axiosInstance';
 
-const AddEditNotes = ({ noteData, type, onClose }) => {
+const AddEditNotes = ({ noteData, type, getAllNotes, onClose }) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [tags, setTags] = useState([]);
@@ -11,7 +12,26 @@ const AddEditNotes = ({ noteData, type, onClose }) => {
 
   // Add Note
   const addNewNote = async () => {
+    try {
+      const response = await axiosInstance.post("/add-note", {
+        title,
+        content,
+        tags,
+      });
 
+      if (response.data && response.data.note) {
+        getAllNotes();
+        onClose();
+      }
+    } catch (error) {
+      if (
+        error.response && 
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setError(error.response.data.message);
+      }
+    }
   }
 
   // Edit Note
@@ -43,7 +63,7 @@ const AddEditNotes = ({ noteData, type, onClose }) => {
     <div className='relative'>
       <button
         className='w-10 h-10 rounded-full flex items-center justify-center absolute -top-3 -right-3 hover:bg-slate-50'
-        onClick={onclose}
+        onClick={onClose}
       >
         <MdClose className='text-xl text-slate-400'/>
       </button>

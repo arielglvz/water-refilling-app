@@ -3,7 +3,9 @@ require("dotenv").config();
 const config = require("./config.json");
 const mongoose = require("mongoose");
 
-mongoose.connect(config.connectionString);
+mongoose.connect(config.connectionString)
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => console.error('MongoDB connection error:', err)); 
 
 const User = require("./models/user.model");
 const Note = require("./models/note.model");
@@ -12,13 +14,14 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 
-const jwt = require("jsonwebToken");
+const jwt = require("jsonwebtoken");
 const { authenticateToken } = require("./utilities");
 
 app.use(express.json());
 
 app.use(
   cors({
+    // origin: ["*", "https://localhost:3000", "http://localhost:5173"],
     origin: "*",
   })
 );
@@ -316,6 +319,6 @@ app.put("/update-note-pinned/:noteId", authenticateToken, async (req, res) => {
   }
 });
 
-app.listen(8000);
+app.listen(8888);
 
 module.exports = app;
